@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Plan</title>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- Değişkenler ve Genel Stiller --- */
+      :root {
+        --bg-dark: #121212;
+        --card-bg: #1e1e1e;
+        --primary-accent: #00f5d4; /* Turkuaz */
+        --secondary-accent: #ff007f; /* Pembe */
+        --text-light: #e0e0e0;
+        --text-muted: #888;
+        --border-color: #333;
+        --success-color: #059669; /* Koyu Yeşil */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* --- Ana Yapı --- */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 2em;
+        font-weight: 700;
+        background: linear-gradient(
+          90deg,
+          var(--primary-accent),
+          var(--secondary-accent)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+      }
+
+      /* --- Antrenman Günleri --- */
+      .day-section {
+        margin-bottom: 50px;
+        transition: opacity 0.5s ease, filter 0.5s ease;
+      }
+
+      /* Aktif olmayan günü soluklaştır */
+      .day-section:not(.active-day) {
+        opacity: 0.4;
+        filter: saturate(0);
+      }
+
+      .day-title {
+        font-size: 1.8em;
+        font-weight: 600;
+        color: var(--primary-accent);
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .category {
+        margin-bottom: 30px;
+      }
+
+      .category-title {
+        font-size: 1.2em;
+        font-weight: 500;
+        color: var(--secondary-accent);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+
+      /* --- Egzersiz Kartları Tasarımı --- */
+      .exercise-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          background-color 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      .exercise-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 245, 212, 0.1);
+      }
+
+      .exercise-gif {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+
+      .exercise-info {
+        flex-grow: 1;
+      }
+
+      .exercise-name {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: var(--text-light);
+        transition: color 0.3s ease;
+      }
+
+      .exercise-detail {
+        font-size: 0.9em;
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+
+      .status-icon {
+        font-size: 28px;
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+
+      /* --- "Tamamlandı" Durumu --- */
+      .exercise-card.completed {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+      }
+
+      .exercise-card.completed .exercise-name,
+      .exercise-card.completed .exercise-detail {
+        text-decoration: line-through;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .exercise-card.completed .status-icon {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>💪 Murat'ın Antrenman Planı</h1>
+      </header>
+
+      <main>
+        <!-- 1. GÜN: ÜST VÜCUT -->
+        <section id="day-1" class="day-section" data-day="1">
+          <h2 class="day-title">1. Gün – Üst Vücut</h2>
+          <div class="category">
+            <h3 class="category-title">Isınma</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://artimg.gympik.com/articles/wp-content/uploads/2020/02/jumping-jacks-gif-5.gif"
+                alt="Jumping Jacks"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Jumping Jacks</div>
+                <div class="exercise-detail">2 x 30sn</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+
+          <div class="category">
+            <h3 class="category-title">Ana Antrenman</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://barbend.com/wp-content/uploads/2023/10/seated-dumbbell-shoulder-press-barbend-movement-gif-masters-2.gif"
+                alt="Dumbbell Shoulder Press"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Shoulder Press</div>
+                <div class="exercise-detail">3 x 10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0449/8453/3153/files/Bent-Over_Dumbbell_Rows.gif?v=1691736243"
+                alt="Dumbbell Bent Over Row"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Bent Over Row</div>
+                <div class="exercise-detail">3 x 10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://i.pinimg.com/originals/fd/bb/09/fdbb092b58863e5c86fdb8bb1411fcea.gif"
+                alt="Push-Up"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Incline Push-Up</div>
+                <div class="exercise-detail">3 x 8-10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://hips.hearstapps.com/hmg-prod/images/workouts/2016/03/dumbbellcurl-1457043876.gif"
+                alt="Dumbbell Biceps Curl"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Biceps Curl</div>
+                <div class="exercise-detail">2 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://hips.hearstapps.com/hmg-prod/images/workouts/2016/03/dumbbelloverheadtricepsextension-1456956005.gif"
+                alt="Dumbbell Overhead Triceps Extension"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Overhead Triceps Extension</div>
+                <div class="exercise-detail">2 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://media.tenor.com/7O6JimICFLoAAAAM/plank.gif"
+                alt="Plank"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Plank</div>
+                <div class="exercise-detail">2 x 30sn</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. GÜN: ALT VÜCUT -->
+        <section id="day-2" class="day-section" data-day="3">
+          <h2 class="day-title">2. Gün – Alt Vücut</h2>
+          <div class="category">
+            <h3 class="category-title">Isınma</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://artimg.gympik.com/articles/wp-content/uploads/2020/02/jumping-jacks-gif-5.gif"
+                alt="Step Jack"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Jumping Jacks</div>
+                <div class="exercise-detail">2 x 30sn</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+          <div class="category">
+            <h3 class="category-title">Ana Antrenman</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://hips.hearstapps.com/hmg-prod/images/workouts/2016/03/bodyweightsquat-1457041691.gif?resize=640:*"
+                alt="Bodyweight Squat"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Bodyweight Squat</div>
+                <div class="exercise-detail">3 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://hips.hearstapps.com/hmg-prod/images/workouts/2016/03/gobletsquat-1457030891.gif"
+                alt="Dumbbell Goblet Squat"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Goblet Squat</div>
+                <div class="exercise-detail">3 x 10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://assets.myworkouts.io/exercises-media/t2DTbYfWZ4afxZ5r2/calf_raise_on_a_dumbbell_male_v11_gif_capoff.gif"
+                alt="Standing Dumbbell Calf Raise"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Standing Dumbbell Calf Raise</div>
+                <div class="exercise-detail">3 x 15</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://media1.popsugar-assets.com/files/thumbor/x_KDO39uBDmxvOP32QljjCI5dwE=/fit-in/792x641/top/filters:format_auto():upscale()/2018/08/09/735/n/1922729/a1d42633e85d4f7e_Standing_Oblique_Crunch_DB-720.gif"
+                alt="Standing Oblique Crunch"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Standing Oblique Crunch</div>
+                <div class="exercise-detail">3 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://sporium.net/wp-content/uploads/2020/12/mekik-hareketleri-sit-ups.gif"
+                alt="Mekik"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Mekik</div>
+                <div class="exercise-detail">2 x 20</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. GÜN: TÜM VÜCUT -->
+        <section id="day-3" class="day-section" data-day="5">
+          <h2 class="day-title">3. Gün – Tüm Vücut</h2>
+          <div class="category">
+            <h3 class="category-title">Isınma</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://artimg.gympik.com/articles/wp-content/uploads/2020/02/jumping-jacks-gif-5.gif"
+                alt="March in Place"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Jumping Jacks</div>
+                <div class="exercise-detail">2 x 30sn</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+          <div class="category">
+            <h3 class="category-title">Ana Antrenman</h3>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://i.pinimg.com/originals/fd/bb/09/fdbb092b58863e5c86fdb8bb1411fcea.gif"
+                alt="Normal Push-Up"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Push-Up</div>
+                <div class="exercise-detail">3 x 8-10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://hips.hearstapps.com/hmg-prod/images/workouts/2016/03/dumbbelldeadlift-1457044319.gif"
+                alt="Dumbbell Deadlift"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Deadlift</div>
+                <div class="exercise-detail">3 x 10</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://www.strengthlog.com/wp-content/uploads/2020/03/Dumbbell-Front-Raise.gif"
+                alt="Dumbbell Front Raise"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Front Raise</div>
+                <div class="exercise-detail">2 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://i0.wp.com/www.strengthlog.com/wp-content/uploads/2020/02/Hammer-curl.gif"
+                alt="Dumbbell Hammer Curl"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Dumbbell Hammer Curl</div>
+                <div class="exercise-detail">2 x 12</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://i.makeagif.com/media/3-25-2016/1_sJp0.gif"
+                alt="Standing Knee-to-Elbow"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Standing Knee-to-Elbow</div>
+                <div class="exercise-detail">2 x 15</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+            <div class="exercise-card" onclick="toggleComplete(this)">
+              <img
+                src="https://media.tenor.com/7O6JimICFLoAAAAM/plank.gif"
+                alt="Plank"
+                class="exercise-gif"
+              />
+              <div class="exercise-info">
+                <div class="exercise-name">Plank</div>
+                <div class="exercise-detail">2 x 30sn</div>
+              </div>
+              <span class="material-symbols-outlined status-icon"
+                >radio_button_unchecked</span
+              >
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Fonksiyon 1: Bir hareketi tamamlandı olarak işaretler
+      function toggleComplete(cardElement) {
+        cardElement.classList.toggle("completed");
+        const icon = cardElement.querySelector(".status-icon");
+        if (cardElement.classList.contains("completed")) {
+          icon.textContent = "check_circle";
+        } else {
+          icon.textContent = "radio_button_unchecked";
+        }
+      }
+
+      // Fonksiyon 2: Sayfa yüklendiğinde bugünün antrenmanını aktif eder
+      document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().getDay(); // Pazar=0, Pzt=1, Salı=2...
+        const sections = document.querySelectorAll(".day-section");
+        let activeDayFound = false;
+
+        sections.forEach((section) => {
+          const dayValue = parseInt(section.dataset.day);
+          if (dayValue === today) {
+            section.classList.add("active-day");
+            activeDayFound = true;
+          }
+        });
+
+        // Eğer bugün antrenman günü değilse, hiçbir günü soluk yapma, hepsini göster.
+        if (!activeDayFound) {
+          sections.forEach((s) => s.classList.add("active-day"));
+        }
+      });
+    </script>
+  </body>
+</html>
